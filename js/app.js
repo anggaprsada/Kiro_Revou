@@ -10,9 +10,11 @@ const itemCategorySelect = document.getElementById('itemCategory');
 const itemDateInput = document.getElementById('itemDate');
 const newCategoryInput = document.getElementById('newCategoryName');
 const addCategoryButton = document.getElementById('addCategoryButton');
+const categoryList = document.getElementById('categoryList');
 const spendLimitInput = document.getElementById('spendLimit');
 const saveLimitButton = document.getElementById('saveLimitButton');
-const formError = document.getElementById('formError');
+const transactionError = document.getElementById('transactionError');
+const manageCategoryError = document.getElementById('manageCategoryError');
 const transactionList = document.getElementById('transactionList');
 const totalBalance = document.getElementById('totalBalance');
 const transactionCount = document.getElementById('transactionCount');
@@ -99,6 +101,48 @@ function renderCategoryOptions() {
   if (selectedValue) {
     itemCategorySelect.value = selectedValue;
   }
+}
+
+function renderCategoryList() {
+  if (!categoryList) return;
+  categoryList.innerHTML = '';
+
+  categories.forEach((category) => {
+    const item = document.createElement('div');
+    item.className = 'category-item';
+    const isDefault = DEFAULT_CATEGORIES.includes(category);
+    const inUse = transactions.some((transaction) => transaction.category === category);
+    item.innerHTML = `
+      <span>
+        <strong>${category}</strong>
+        ${isDefault ? '<span class="category-badge">default</span>' : ''}
+        ${inUse ? '<span class="category-badge">in use</span>' : ''}
+      </span>
+      ${isDefault || inUse ? '' : '<button class="delete-category-button" type="button">Delete</button>'}
+    `;
+
+    if (!isDefault && !inUse) {
+      const deleteButton = item.querySelector('.delete-category-button');
+      deleteButton.addEventListener('click', () => deleteCategory(category));
+    }
+
+    categoryList.appendChild(item);
+  });
+}
+
+function deleteCategory(categoryName) {
+  const exists = categories.includes(categoryName);
+  if (!exists) return;
+  const inUse = transactions.some((transaction) => transaction.category === categoryName);
+  if (inUse) {
+    manageCategoryError.textContent = 'Cannot delete a category that is currently used in transactions.';
+    return;
+  }
+  manageCategoryError.textContent = '';
+  categories = categories.filter((category) => category !== categoryName);
+  saveCategories();
+  renderCategoryOptions();
+  renderCategoryList();
 }
 
 function getVisibleTransactions() {
@@ -214,11 +258,17 @@ function createChart(visibleTransactions) {
       ]
     },
     options: {
+      layout: {
+        padding: {
+          bottom: 24
+        }
+      },
       plugins: {
         legend: {
           position: 'bottom',
           labels: {
-            color: getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#111'
+            color: getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#111',
+            padding: 16
           }
         },
         tooltip: {
@@ -247,6 +297,7 @@ function render() {
   updateBalance();
   renderTransactionList(visibleTransactions);
   renderMonthlySummary(visibleTransactions);
+  renderCategoryList();
   updateChart(visibleTransactions);
 }
 
@@ -258,11 +309,11 @@ function addTransaction(event) {
   const dateValue = itemDateInput.value;
 
   if (!name || Number.isNaN(amountValue) || amountValue <= 0 || !category || !dateValue) {
-    formError.textContent = 'Please enter name, amount, category, and date.';
+    transactionError.textContent = 'Please enter name, amount, category, and date.';
     return;
   }
 
-  formError.textContent = '';
+  transactionError.textContent = '';
 
   const transaction = {
     id: Date.now().toString(),
@@ -282,29 +333,30 @@ function addTransaction(event) {
 function addCategory() {
   const categoryName = newCategoryInput.value.trim();
   if (!categoryName) {
-    formError.textContent = 'Enter a custom category name first.';
+    manageCategoryError.textContent = 'Enter a custom category name first.';
     return;
   }
   if (categories.includes(categoryName)) {
-    formError.textContent = 'This category already exists.';
+    manageCategoryError.textContent = 'This category already exists.';
     return;
   }
   categories.push(categoryName);
   saveCategories();
   renderCategoryOptions();
+  renderCategoryList();
   newCategoryInput.value = '';
-  formError.textContent = '';
+  manageCategoryError.textContent = '';
 }
 
 function saveLimitValue() {
   const limitValue = Number(spendLimitInput.value);
   if (Number.isNaN(limitValue) || limitValue < 0) {
-    formError.textContent = 'Enter a valid limit amount.';
+    manageCategoryError.textContent = 'Enter a valid limit amount.';
     return;
   }
   saveLimit(limitValue);
   spendLimitInput.value = '';
-  formError.textContent = '';
+  manageCategoryError.textContent = '';
   render();
 }
 
@@ -347,6 +399,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadLimit();
   loadTransactions();
   renderCategoryOptions();
+  renderCategoryList();
   setCurrentDateInput();
   setCurrentMonthLabel();
   render();

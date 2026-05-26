@@ -65,30 +65,32 @@
           <input id="itemDate" name="itemDate" type="date" />
         </label>
 
-        <p id="formError" class="form-error" aria-live="polite"></p>
+        <p id="transactionError" class="form-error" aria-live="polite"></p>
         <button class="button-primary" type="submit">Add Transaction</button>
       </form>
     </section>
 
-    <section class="panel card">
-      <h2>Manage Categories & Limits</h2>
-      <div class="transaction-form">
-        <label>
-          Add custom category
-          <div class="category-add-row">
-            <input id="newCategoryName" type="text" placeholder="New category" />
-            <button id="addCategoryButton" class="button-secondary" type="button">Add</button>
-          </div>
-        </label>
-
-        <label>
-          Highlight limit
-          <div class="category-add-row">
-            <input id="spendLimit" name="spendLimit" type="number" min="0" step="1" placeholder="e.g. 50" />
-            <button id="saveLimitButton" class="button-secondary" type="button">Set</button>
-          </div>
-        </label>
+    <section class="panel card manage-categories-panel">
+      <div class="panel-header">
+        <h2>Manage Categories</h2>
+        <span class="meta-text">Add a custom category or set highlight limit here</span>
       </div>
+      <p id="manageCategoryError" class="form-error" aria-live="polite"></p>
+      <label>
+        Add custom category
+        <div class="category-add-row">
+          <input id="newCategoryName" type="text" placeholder="New category" />
+          <button id="addCategoryButton" class="button-secondary" type="button">Add</button>
+        </div>
+      </label>
+      <label>
+        Highlight limit
+        <div class="category-add-row">
+          <input id="spendLimit" name="spendLimit" type="number" min="0" step="1" placeholder="e.g. 50" />
+          <button id="saveLimitButton" class="button-secondary" type="button">Set</button>
+        </div>
+      </label>
+      <div id="categoryList" class="category-list"></div>
     </section>
 
     <section class="grid-layout">

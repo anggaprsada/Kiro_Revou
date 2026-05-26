@@ -157,6 +157,29 @@ h1 {
   margin-bottom: 24px;
 }
 
+.manage-categories-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.manage-categories-panel label {
+  margin-bottom: 0;
+}
+
+.manage-categories-panel .category-add-row {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.manage-categories-panel .category-add-row input {
+  min-width: 0;
+  flex: 1;
+}
+
+.manage-categories-panel .category-list {
+  margin-top: 8px;
+}
+
 .balance-card {
   margin-bottom: 24px;
   text-align: center;
@@ -180,6 +203,50 @@ h1 {
 .transaction-form {
   display: grid;
   gap: 16px;
+}
+
+.category-list {
+  display: grid;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+
+.category-item span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.12);
+  color: #4338ca;
+  font-size: 0.82rem;
+}
+
+.delete-category-button {
+  border: none;
+  border-radius: 14px;
+  background: #ef4444;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.delete-category-button:hover {
+  background: #dc2626;
 }
 
 label {
@@ -346,11 +413,22 @@ select:focus {
 }
 
 .chart-panel {
-  min-height: 320px;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-frame {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 12px;
 }
 
 .chart-panel canvas {
-  width: 100% !important;
+  width: min(100%, 380px) !important;
   max-width: 100%;
   aspect-ratio: 1.2 / 1;
 }
