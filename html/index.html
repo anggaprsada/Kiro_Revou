@@ -22,6 +22,21 @@
       <p id="totalBalance" class="balance-value">$0.00</p>
     </section>
 
+    <section class="panel card summary-row">
+      <div>
+        <p class="summary-label">Current month total</p>
+        <p id="monthlyTotal" class="summary-value">$0.00</p>
+      </div>
+      <div>
+        <p class="summary-label">Transactions this month</p>
+        <p id="monthlyItems" class="summary-value">0</p>
+      </div>
+      <div>
+        <p class="summary-label">Alert threshold</p>
+        <p id="thresholdValue" class="summary-value">None</p>
+      </div>
+    </section>
+
     <section class="panel card">
       <h2>Add Transaction</h2>
       <form id="transactionForm" class="transaction-form">
@@ -45,9 +60,35 @@
           </select>
         </label>
 
+        <label>
+          Date
+          <input id="itemDate" name="itemDate" type="date" />
+        </label>
+
         <p id="formError" class="form-error" aria-live="polite"></p>
         <button class="button-primary" type="submit">Add Transaction</button>
       </form>
+    </section>
+
+    <section class="panel card">
+      <h2>Manage Categories & Limits</h2>
+      <div class="transaction-form">
+        <label>
+          Add custom category
+          <div class="category-add-row">
+            <input id="newCategoryName" type="text" placeholder="New category" />
+            <button id="addCategoryButton" class="button-secondary" type="button">Add</button>
+          </div>
+        </label>
+
+        <label>
+          Highlight limit
+          <div class="category-add-row">
+            <input id="spendLimit" name="spendLimit" type="number" min="0" step="1" placeholder="e.g. 50" />
+            <button id="saveLimitButton" class="button-secondary" type="button">Set</button>
+          </div>
+        </label>
+      </div>
     </section>
 
     <section class="grid-layout">
@@ -55,6 +96,24 @@
         <div class="panel-header">
           <h2>Transactions</h2>
           <span id="transactionCount" class="meta-text">0 items</span>
+        </div>
+        <div class="controls-row">
+          <div class="month-navigation">
+            <button id="prevMonth" type="button">←</button>
+            <span id="currentMonthLabel">This month</span>
+            <button id="nextMonth" type="button">→</button>
+          </div>
+          <label class="sort-select">
+            Sort by
+            <select id="sortSelect">
+              <option value="date_desc">Date newest</option>
+              <option value="date_asc">Date oldest</option>
+              <option value="amount_desc">Amount high to low</option>
+              <option value="amount_asc">Amount low to high</option>
+              <option value="category_asc">Category A - Z</option>
+              <option value="category_desc">Category Z - A</option>
+            </select>
+          </label>
         </div>
         <div id="transactionList" class="transaction-list"></div>
       </div>
